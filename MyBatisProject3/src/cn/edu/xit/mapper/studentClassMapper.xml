@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：该mapper.xml映射文件的唯一标识 -->
+<mapper namespace="cn.edu.xit.mapper.StudentClassMapper">  
+		<!-- ====一对多,带延迟加载==== -->
+	<select id="queryClassAndStudents" resultMap="class_student_lazyLoad_map">
+		<!-- 111111111先查询班级-->
+		select c.* from studentClass c 
+	</select>
+	<!-- 类和表的对应关系 -->
+	<resultMap type="StudentClass" id="class_student_lazyLoad_map">
+		<!-- 因为type的祖类是StudentClass,因此先配置班级的信息 -->
+		<id property="classId" column="classId"/>
+		<result property="className" column="className"/>
+		<!-- 配置成员属性学生，一对多;属性类型:javaType,属性的元素类型ofType -->
+		<!-- 222222再查询班级对应的学生 -->
+		<collection property="students" ofType="student" select="cn.edu.xit.mapper.StudentMapper.queryStudentsByClassId" column="classid">
+			<!--
+			<id property="stuNo" column="stuNO"/>
+			<result property="stuName" column="stuName"/>
+			<result property="stuAge" column="stuAge"/>
+			 -->
+		</collection>
+	</resultMap>
+	
+	
+	
+</mapper>
